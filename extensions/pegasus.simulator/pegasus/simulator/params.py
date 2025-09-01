@@ -9,6 +9,7 @@ from pathlib import Path
 
 import isaacsim.storage.native as nucleus
 
+
 # Extension configuration
 EXTENSION_NAME = "Pegasus Simulator"
 WINDOW_TITLE = "Pegasus Simulator"

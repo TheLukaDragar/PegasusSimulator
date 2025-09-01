@@ -10,7 +10,7 @@ from pegasus.simulator.logic.state import State
 from pegasus.simulator.logic.graphical_sensors import GraphicalSensor
 from pegasus.simulator.logic.interface.pegasus_interface import PegasusInterface
 
-from omni.isaac.sensor import Camera
+from isaacsim.sensors.camera.camera import Camera
 from omni.usd import get_stage_next_free_path
 
 # Auxiliary scipy and numpy modules
@@ -54,7 +54,7 @@ class MonocularCamera(GraphicalSensor):
         self._stage_prim_path = ""
 
         # Configurations of the camera
-        self._depth = config.get("depth", True)
+        self._depth = config.get("depth", False)
         self._position = config.get("position", np.array([0.30, 0.0, 0.0]))
         self._orientation = config.get("orientation", np.array([0.0, 0.0, 180.0]))
         self._resolution = config.get("resolution", (1920, 1200))
@@ -99,10 +99,18 @@ class MonocularCamera(GraphicalSensor):
         self._camera.initialize()
 
         # Set the correct properties of the camera (this must be done after the camera object is initialized)
-        #self._camera.set_projection_type("pinhole")
-        #self._camera.set_projection_type("fisheyePolynomial")  # # f-theta model, to approximate the fisheye model
-        #self._camera.set_rational_polynomial_properties(self._resolution[0], self._resolution[1], cx, cy, self._diagonal_fov, self._distortion_coefficients)
-        #self._camera.set_clipping_range(0.05, 100.0)
+        # Set projection type based on FOV - if FOV > 120 degrees, use fisheye
+        if self._diagonal_fov > 120.0:
+            # Use modern OpenCV fisheye model instead of deprecated fisheyePolynomial
+            self._camera.set_projection_type("pinhole")  # Base projection
+            self._camera.set_lens_distortion_model("opencvFisheye")  # Modern fisheye distortion
+            self._camera.set_opencv_fisheye_properties(
+                cx=cx, cy=cy, fx=fx, fy=fy, 
+                fisheye=self._distortion_coefficients.tolist()
+            )
+        else:
+            self._camera.set_projection_type("pinhole") 
+        #self._camera.set_clipping_range(0.05, 10000.0)
 
         # Check if depth is enabled, if so, set the depth properties
         if self._depth:
@@ -158,7 +166,9 @@ class MonocularCamera(GraphicalSensor):
             #if self._depth:
             #    self._state["depth"] = self._camera.get_depth()
 
-            if self._camera.get_projection_type() == "pinhole":
+            if self._camera.get_lens_distortion_model() == "pinhole":
+            #if self._camera.get_projection_type() == "pinhole":
+
                 self._state["intrinsics"] = self._camera.get_intrinsics_matrix()
             
         # If something goes wrong during the data acquisition, just return None

@@ -120,7 +120,7 @@ class UIDelegate:
     def set_streaming_backend(self, backend: str = BACKENDS['px4']):
         self._streaming_backend = backend
 
-    def set_px4_autostart_checkbox(self, checkbox_model:ui.AbstractValueModel):
+    def set_px4_autostart_checkbox(self, checkbox_model: ui.AbstractValueModel):
         self._px4_autostart_checkbox = checkbox_model
 
     def set_px4_directory_field(self, directory_field_model: ui.AbstractValueModel):
@@ -157,7 +157,12 @@ class UIDelegate:
 
             # Get the name of the selected world
             selected_world = self._scene_names[environemnt_index]
-            
+
+            #log the selected world
+            carb.log_warn("Selected world: " + selected_world)
+
+
+            carb.log_warn("Selected world: " + selected_world)
             # Try to spawn the selected world
             self._pegasus_sim.set_world_settings(**WORLD_SETTINGS[self._streaming_backend])
             asyncio.ensure_future(self._pegasus_sim.load_environment_async(SIMULATION_ENVIRONMENTS[selected_world], force_clear=True))
@@ -322,7 +327,7 @@ class UIDelegate:
             if camera_position is not None and camera_target is not None:
 
                 # Set the camera view to a fixed value
-                self._pegasus_sim.set_viewport_camera(eye=camera_position, target=camera_target)
+                self._pegasus_sim.set_viewport_camera(camera_position=camera_position, camera_target=camera_target)
     
     def on_set_new_default_px4_path(self):
         """
