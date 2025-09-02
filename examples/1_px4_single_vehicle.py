@@ -19,6 +19,7 @@ try:
     HAS_ISAACLAB = True
 except ImportError:
     HAS_ISAACLAB = False
+print(f"HAS_ISAACLAB: {HAS_ISAACLAB}")
 
 # Parse command line arguments to support kit args
 parser = argparse.ArgumentParser(description="PX4 Single Vehicle Simulation")
