@@ -40,4 +40,4 @@ _build
 # ROS 2
 build/
 install/
-log/
+log/extensions/ssrd.pegasus.simulator/ssrd/pegasus/simulator/assets/flightdela2.usd
