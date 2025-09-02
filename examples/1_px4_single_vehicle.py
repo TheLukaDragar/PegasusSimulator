@@ -11,6 +11,7 @@
 # Imports to start Isaac Sim from this script
 import argparse
 import carb
+import os
 from isaacsim import SimulationApp
 
 # Check if Isaac Lab is available for AppLauncher
@@ -57,16 +58,16 @@ from scipy.spatial.transform import Rotation  # noqa: E402
 import numpy as np  # noqa: E402
 
 # Import the Pegasus API for simulating drones
-from pegasus.simulator.params import ROBOTS  # noqa: E402
-from pegasus.simulator.logic.backends.px4_mavlink_backend import (  # noqa: E402
+from ssrd.pegasus.simulator.params import ROBOTS  # noqa: E402
+from ssrd.pegasus.simulator.logic.backends.px4_mavlink_backend import (  # noqa: E402
     PX4MavlinkBackend, 
     PX4MavlinkBackendConfig
 )
 # Add camera support imports
-from pegasus.simulator.logic.graphical_sensors.monocular_camera import MonocularCamera  # noqa: E402
+from ssrd.pegasus.simulator.logic.graphical_sensors.monocular_camera import MonocularCamera  # noqa: E402
 #from pegasus.simulator.logic.backends.ros2_backend import ROS2Backend  # noqa: E402
-from pegasus.simulator.logic.vehicles.multirotor import Multirotor, MultirotorConfig  # noqa: E402
-from pegasus.simulator.logic.interface.pegasus_interface import PegasusInterface  # noqa: E402
+from ssrd.pegasus.simulator.logic.vehicles.multirotor import Multirotor, MultirotorConfig  # noqa: E402
+from ssrd.pegasus.simulator.logic.interface.pegasus_interface import PegasusInterface  # noqa: E402
 
 
 class PegasusApp:
@@ -103,6 +104,11 @@ class PegasusApp:
         # Try to spawn the selected robot in the world to the specified namespace
         config_multirotor = MultirotorConfig()
         # Create the multirotor configuration
+        # Set DDS environment variables
+        os.environ["PX4_UXRCE_DDS_NS"] = "px4_0"  # DDS namespace
+        os.environ["PX4_UXRCE_DDS_PORT"] = "8888"  # DDS port
+        os.environ["ROS_DOMAIN_ID"] = "0"  # DDS domain ID
+
         mavlink_config = PX4MavlinkBackendConfig({
             "vehicle_id": 0,
             "px4_autolaunch": True,

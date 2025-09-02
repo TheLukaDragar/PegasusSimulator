@@ -26,7 +26,7 @@
             "name": "Python: Px4 Single Vehicle",
             "type": "python",
             "request": "launch",
-            "args" : ["--livestream", "1", "--kit_args", "--/app/livestream/publicEndpointAddress=100.112.57.52 --/app/livestream/port=49100 --enable omni.usd.schema.flow --enable omni.usd.schema.scene.visualization --enable omni.isaac.sensor-13.0.7 --enable pegasus.simulator"],
+            "args" : ["--livestream", "1", "--kit_args", "--/app/livestream/publicEndpointAddress=100.112.57.52 --/app/livestream/port=49100  --ext-folder /home/luka4/PegasusSimulator/extensions --enable omni.usd.schema.scene.visualization --enable omni.isaac.sensor-13.0.7 --enable ssrd.pegasus.simulator"],
             "program": "${workspaceFolder}/examples/1_px4_single_vehicle.py",
             "console": "integratedTerminal",
             "env": {
@@ -38,7 +38,7 @@
             "name": "Current File",
             "type": "python",
             "request": "launch",
-            "args" : ["--livestream", "1", "--kit_args", "--/app/livestream/publicEndpointAddress=100.112.57.52 --/app/livestream/port=49100 --enable omni.usd.schema.flow --enable omni.usd.schema.scene.visualization --enable omni.isaac.sensor-13.0.7 --enable pegasus.simulator"],
+            "args" : ["--livestream", "1", "--kit_args", "--/app/livestream/publicEndpointAddress=100.112.57.52 --/app/livestream/port=49100 --enable omni.usd.schema.flow --enable omni.usd.schema.scene.visualization --enable omni.isaac.sensor-13.0.7 --enable ssrd.pegasus.simulator"],
             "program": "${file}",
             "console": "integratedTerminal",
             "env": {
